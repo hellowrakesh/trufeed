@@ -1,0 +1,12 @@
+template: Hello Welcome to TruFeed
+
+storage:
+  rootDir: /
+  userStore:
+    name: user
+    path: /user
+    maxFileSize: 
+  feedStore:
+    name: feed
+    path: /feed
+    maxFileSize: 64
