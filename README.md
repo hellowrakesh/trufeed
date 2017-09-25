@@ -171,7 +171,6 @@ Explore following REST Api to try out the service.
 ## Choice of technology & frameworks
 
 * [Dropwizard](https://github.com/dropwizard/dropwizard) for the general scaffolding. Dropwizard provides basic infrastructure to build microservices in java using some of the best technologies available in Open Source.
-* [Parseq](https://github.com/linkedin/parseq) for writing asynchronous code for async operations viz. IO. Its a non-blocking framework developed by [LinkedIn](https://www.linkedin.com) and support parallel task execution asynchonously.
 * [Gradle](https://gradle.org/) for build and packaging, it provides flexibility as well as incremental builds for efficient development.
 * [Java 8](http://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html) as the language as developer is comfortable with the language and also Oracle made a lot of improvements over the years making it one of the most robust, high-performance and platform language.
 
@@ -220,7 +219,20 @@ The service implements a custom storage. Here are the design rationale:
 {"createDate":"2017-09-25 21:09:10","uuid":"0bf0d2ca-13d8-45a0-b2ba-1cbd4dedf6a3","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 {"createDate":"2017-09-25 21:09:11","uuid":"36dae2d6-8a65-43d6-8aeb-719d732d541d","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 	```
-* When fetching list of articles for a given feed, the articles are returned in the order, where the lastes published article is on the top. 
+* When fetching list of articles for a given feed, the articles are returned in the order, where the lastes published article is on the top.
+* All the dates are UTC.
+
+# Code Structure:
+
+The code is primarily devided in following high level layers:
+ - api: responsible for handling the request from the client, basic validation and delegates to service.
+ - service: this is where all business logic goes. It is agnostic of the storage layer and only performs business logic.
+ - repository: abstraction for storage and here it uses file system storage extending FileRepository. It extensively uses Java NIO2 package.
+ - container: everything that has to do with the server to get initialized and started. This is where all bindings, engine, configurations are managed.
+ 
+* [Guice](https://github.com/google/guice): The code uses Guice for dependency injection and bindings.
+* [Parseq](https://github.com/linkedin/parseq): The code follows async task based execution with Parseq, where all service and repository interfaces return a future task with a promise, which is satisfied later. The execution plan is started in api layer and it provides a non-block async execution for various tasks, making it highly efficient. Its a non-blocking framework developed by [LinkedIn](https://www.linkedin.com) and support parallel task execution asynchonously.
+* [Jackson](https://github.com/FasterXML/jackson): It is used for all JSON serialization and de-serialization.
 
 # Future Enhancements
 
