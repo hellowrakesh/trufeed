@@ -10,6 +10,15 @@ plugins {
 	id 'com.github.sherter.google-java-format' version '0.6'
 }
 
+apply plugin: 'java'
+apply plugin: 'application'
+
+// Use Java 8 by default
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+version = '1.0'
+
+
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use jcenter for resolving your dependencies.
@@ -18,17 +27,15 @@ repositories {
     mavenCentral()
 }
 
-// Apply the java-library plugin to add support for Java Library
-apply plugin: 'java'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 dependencies {
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
     compile group: 'com.linkedin.parseq', name: 'parseq', version: '2.6.21'
     compile group: 'io.dropwizard', name: 'dropwizard-core', version: '1.1.4'
+    compile group: 'io.dropwizard', name: 'dropwizard-client', version: '1.1.4'
     testCompile 'junit:junit:4.11'
 }
+
+mainClassName = 'com.trufeed.container.TrufeedServer'
 
 jar {
     baseName = 'trufeed'
@@ -41,4 +48,26 @@ jar {
     manifest {
         attributes("Main-Class": "com.trufeed.container.TrufeedServer" )
     }
+}
+
+/*
+task demoJar(type: Jar) {
+ 	from sourceSets.main.output
+ 	baseName = 'trufeed-demo'
+    version =  '1.0.0'
+    from {
+        (configurations.runtime).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    manifest {
+        attributes("Main-Class": "com.trufeed.container.TrufeedServer" )
+    }
+}
+
+jar.dependsOn(demoJar)
+*/
+// Configure the run task to start the Dropwizard service
+run {
+    args 'server', './config.yaml'
 }

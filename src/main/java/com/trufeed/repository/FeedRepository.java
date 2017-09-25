@@ -12,6 +12,7 @@ import com.trufeed.entities.Feed;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Singleton
 public class FeedRepository extends FileRepository {
@@ -23,6 +24,18 @@ public class FeedRepository extends FileRepository {
   @Inject
   public FeedRepository(Storage storage) {
     super(storage, storage.getFeedStore());
+  }
+
+  public Task<List<Feed>> getAll() {
+    return getAllFiles("")
+        .flatMap(
+            files ->
+                Task.par(
+                    files
+                        .stream()
+                        .filter(file -> file.isDirectory())
+                        .map(dir -> get(dir.getName()))
+                        .collect(Collectors.toList())));
   }
 
   public Task<Feed> get(String uuid) {
@@ -49,17 +62,21 @@ public class FeedRepository extends FileRepository {
   }
 
   public Task<List<Article>> getArticles(String feedUuid) {
-    return getFileContentsAsStream(feedUuid, FEED_ARTICLE_DIR_NAME, FEED_ARTICLE_DEFAULT_FILE_NAME)
-        .flatMap(
-            stream -> {
-              // sort the stream in reverse order to have the latest
-              // element at the top
-              return Task.value(
-                  stream
-                      .sorted(Collections.reverseOrder())
-                      .map(line -> fromJsonStringToObject(line, Article.class))
-                      .collect(Collectors.toList()));
-            });
+    Task<Stream<String>> streamTask =
+        getFileContentsAsStream(feedUuid, FEED_ARTICLE_DIR_NAME, FEED_ARTICLE_DEFAULT_FILE_NAME);
+    if (streamTask == null) {
+      return Task.value(Lists.newArrayList());
+    }
+    return streamTask.flatMap(
+        stream -> {
+          // sort the stream in reverse order to have the latest
+          // element at the top
+          return Task.value(
+              stream
+                  .sorted(Collections.reverseOrder())
+                  .map(line -> fromJsonStringToObject(line, Article.class))
+                  .collect(Collectors.toList()));
+        });
   }
 
   public Task<Boolean> saveArticle(String feedUuid, List<Article> articles) {

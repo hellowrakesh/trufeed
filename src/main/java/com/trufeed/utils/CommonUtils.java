@@ -1,6 +1,7 @@
 package com.trufeed.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -54,6 +55,16 @@ public class CommonUtils {
       return mapper.writeValueAsString(object);
     } catch (JsonProcessingException exception) {
       LOG.error("Unable to convert object: " + object + " to Json string", exception);
+      throw new RuntimeException(exception);
+    }
+  }
+
+  public static <T> T fromJsonStringToObject(String value, TypeReference<T> ref) {
+    try {
+      return mapper.readValue(value, ref);
+    } catch (Exception exception) {
+      LOG.error(
+          "Unable to convert json string: " + value + " to object of type: " + ref, exception);
       throw new RuntimeException(exception);
     }
   }

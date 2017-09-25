@@ -2,6 +2,7 @@ package com.trufeed.entities;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
 import java.util.Date;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -37,5 +38,15 @@ public class Feed extends FileSerializable {
 
   public String getDescription() {
     return description;
+  }
+
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("uuid", uuid)
+        .add("name", name)
+        .add("title", title)
+        .add("description", description)
+        .add("createDate", createDate)
+        .toString();
   }
 }

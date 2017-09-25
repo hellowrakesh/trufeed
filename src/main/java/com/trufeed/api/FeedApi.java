@@ -30,6 +30,11 @@ public class FeedApi extends Api {
   }
 
   @GET
+  public Response getAll() {
+    return execute(service.getAll());
+  }
+
+  @GET
   @Path("/{feedUuid}")
   public Response get(@PathParam("feedUuid") String uuid) {
     return execute(service.get(uuid));

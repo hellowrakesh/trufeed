@@ -30,6 +30,10 @@ public class FeedService extends Service {
     return repository.get(feedUuid);
   }
 
+  public Task<List<Feed>> getAll() {
+    return repository.getAll();
+  }
+
   public Task<Feed> add(Feed feed) {
     String uuid = generateUuid(feed.getName());
     Feed newFeed =

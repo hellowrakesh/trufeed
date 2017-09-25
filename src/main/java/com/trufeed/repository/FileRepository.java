@@ -89,22 +89,35 @@ public class FileRepository {
     Path path = resolve(paths);
     return Task.callable(
         () -> {
+          Stream<Path> stream = null;
           try {
-            return Files.list(path)
-                .map(x -> x.toFile())
-                .filter(x -> x.isFile())
-                .collect(Collectors.toList());
+            if (!Files.exists(path)) {
+              return Lists.newArrayList();
+            }
+            stream = Files.list(path);
+            if (stream == null) {
+              return Lists.newArrayList();
+            }
+            return stream.map(x -> x.toFile()).collect(Collectors.toList());
           } catch (IOException exception) {
             LOG.error("Error while getting list of files from path: " + path, exception);
             throw new RuntimeException(
                 "Error while getting list of files from path: " + path, exception);
+          } finally {
+            if (stream != null) {
+              stream.close();
+            }
           }
         });
   }
 
   public Task<Stream<String>> getFileContentsAsStream(String... paths) {
     try {
-      return Task.value(Files.lines(resolve(paths)));
+      Path p = resolve(paths);
+      if (!Files.exists(p)) {
+        return null;
+      }
+      return Task.value(Files.lines(p));
     } catch (Exception exception) {
       LOG.error("Error while reading files as stream", exception);
       throw new RuntimeException("Error while reading files as stream", exception);
