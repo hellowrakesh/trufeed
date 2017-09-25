@@ -19,12 +19,6 @@ public class TrufeedModule extends AbstractModule {
   protected void configure() {
     bind(TrufeedConfiguration.class).toInstance(configuration);
     bind(TrufeedConfiguration.Storage.class).toInstance(configuration.getStorage());
-    //    bind(TrufeedConfiguration.StoreConfig.class)
-    //        .annotatedWith(Names.named("userStoreConfig"))
-    //        .toInstance(configuration.getStorage().getUserStore());
-    //    bind(TrufeedConfiguration.StoreConfig.class)
-    //        .annotatedWith(Names.named("feedStoreConfig"))
-    //        .toInstance(configuration.getStorage().getFeedStore());
     bind(Engine.class).toInstance(getEngine());
   }
 

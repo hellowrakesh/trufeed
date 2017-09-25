@@ -2,6 +2,8 @@ package com.trufeed.api;
 
 import com.linkedin.parseq.Engine;
 import com.linkedin.parseq.Task;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 public abstract class Api {
 
@@ -11,13 +13,15 @@ public abstract class Api {
     this.engine = engine;
   }
 
-  protected <T> T execute(Task<T> task) {
+  protected <T> Response execute(Task<T> task) {
     try {
       engine.run(task);
       task.await();
-      return task.get();
+      return Response.ok().entity(task.get()).build();
     } catch (InterruptedException exception) {
-      throw new RuntimeException(exception);
+      return Response.status(Status.INTERNAL_SERVER_ERROR).entity(exception.getMessage()).build();
+    } catch (Exception exception) {
+      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
     }
   }
 }

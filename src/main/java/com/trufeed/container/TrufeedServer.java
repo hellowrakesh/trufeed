@@ -2,6 +2,7 @@ package com.trufeed.container;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.trufeed.api.FeedApi;
 import com.trufeed.api.UserApi;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -33,5 +34,6 @@ public class TrufeedServer extends Application<TrufeedConfiguration> {
     Injector injector = Guice.createInjector(new TrufeedModule(configuration));
     environment.healthChecks().register("trufeed", new TrufeedHealthCheck());
     environment.jersey().register(injector.getInstance(UserApi.class));
+    environment.jersey().register(injector.getInstance(FeedApi.class));
   }
 }

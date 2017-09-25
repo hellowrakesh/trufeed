@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,26 +30,32 @@ public class UserApi extends Api {
 
   @GET
   @Path("/{userUuid}")
-  public User get(@PathParam("userUuid") String uuid) {
+  public Response get(@PathParam("userUuid") String uuid) {
     return execute(service.get(uuid));
   }
 
   @Consumes(MediaType.APPLICATION_JSON)
   @POST
-  public User create(User user) {
+  public Response create(User user) {
     return execute(service.add(user));
   }
 
+  @GET
+  @Path("/{userUuid}/feeds")
+  public Response getSubscribedFeeds(@PathParam("userUuid") String uuid) {
+    return execute(service.getSubscribedFeeds(uuid));
+  }
+  
   @PATCH
   @Path("{userUuid}/feed/{feedUuid}/subscribe")
-  public boolean subscribe(
+  public Response subscribe(
       @PathParam("feedUuid") String feedUuid, @PathParam("userUuid") String userUuid) {
     return execute(service.subscribe(userUuid, feedUuid));
   }
 
   @PATCH
   @Path("{userUuid}/feed/{feedUuid}/unsubscribe")
-  public boolean unsubscribe(
+  public Response unsubscribe(
       @PathParam("feedUuid") String feedUuid, @PathParam("userUuid") String userUuid) {
     return execute(service.unsubscribe(userUuid, feedUuid));
   }

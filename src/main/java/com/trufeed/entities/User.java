@@ -3,20 +3,17 @@ package com.trufeed.entities;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
-import java.io.Serializable;
 import java.util.Date;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class User implements Serializable {
+public class User extends LogSerializable {
 
   /** */
   private static final long serialVersionUID = 578254629453228515L;
 
-  private final String uuid;
   @NotEmpty private final String userName;
   private final String firstName;
   private final String lastName;
-  private final Date createDate;
 
   @JsonCreator
   public User(
@@ -25,15 +22,10 @@ public class User implements Serializable {
       @JsonProperty("firstName") String firstName,
       @JsonProperty("lastName") String lastName,
       @JsonProperty("createDate") Date createDate) {
-    this.uuid = uuid;
+    super(createDate, uuid);
     this.userName = userName;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.createDate = createDate;
-  }
-
-  public String getUuid() {
-    return uuid;
   }
 
   public String getUserName() {
@@ -46,10 +38,6 @@ public class User implements Serializable {
 
   public String getLastName() {
     return lastName;
-  }
-
-  public Date getCreateDate() {
-    return createDate;
   }
 
   public String toString() {
