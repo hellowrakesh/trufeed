@@ -234,6 +234,8 @@ The code is primarily devided in following high level layers:
 * [Parseq](https://github.com/linkedin/parseq): The code follows async task based execution with Parseq, where all service and repository interfaces return a future task with a promise, which is satisfied later. The execution plan is started in api layer and it provides a non-block async execution for various tasks, making it highly efficient. Its a non-blocking framework developed by [LinkedIn](https://www.linkedin.com) and support parallel task execution asynchonously.
 * [Jackson](https://github.com/FasterXML/jackson): It is used for all JSON serialization and de-serialization.
 
+The code has been foramtted using Gradle plugin for [Google Java Formatter](https://github.com/google/google-java-format).
+
 # Future Enhancements
 
 * The next step would be to fetch only a subset of the data, as needed by the user or based on the time. This can be achieved through RandomFileAccess and reading buffers in reverse direction.
