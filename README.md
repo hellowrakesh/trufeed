@@ -23,13 +23,16 @@ Explore following REST Api to try out the service.
 * Create a new feed:
 	POST: /feed
 	Payload:
-		```{
+		```
+			{
 				"name": "my first feed post here",
 				"title": "title 01",
 				"description": "description 01"
-			}```
+			}
+		```
 	Response:
-		```{
+		```
+			{
 			    "createDate": 1506355004697,
 			    "uuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
 			    "name": "my first feed post here",
@@ -40,26 +43,30 @@ Explore following REST Api to try out the service.
 * Get all the feeds:
 	GET: /feed
 	Response:
-		```[
-		    {
-		        "createDate": 1506370575000,
-		        "uuid": "04fda720-c8d4-3d38-8531-43733edd02be",
-		        "name": "name_2",
-		        "title": "title 2",
-		        "description": "description 2"
-		    }
-		]
+		```
+			[
+			    {
+			        "createDate": 1506370575000,
+			        "uuid": "04fda720-c8d4-3d38-8531-43733edd02be",
+			        "name": "name_2",
+			        "title": "title 2",
+			        "description": "description 2"
+			    }
+			]
 		```
 * Create a new user:
 	POST: /user
 	Payload:
-		```{
-		  "userName": "rakeshsinha",
-		  "firstName": "Rakesh",
-		  "lastName": "Sinha"
-		}```
+		```
+			{
+			  "userName": "rakeshsinha",
+			  "firstName": "Rakesh",
+			  "lastName": "Sinha"
+			}
+		```
 	Response:
-		```{
+		```
+			{
 			    "createDate": 1506354979004,
 			    "uuid": "d703a5f3-a1fa-3042-bc32-ff400bdd1ecb",
 			    "userName": "rakeshsinha",
@@ -70,7 +77,8 @@ Explore following REST Api to try out the service.
 * Get user details:
 	GET: /user/{userUuid}
 	Response:
-		```{
+		```
+			{
 			    "createDate": 1506354979004,
 			    "uuid": "d703a5f3-a1fa-3042-bc32-ff400bdd1ecb",
 			    "userName": "rakeshsinha",
@@ -82,18 +90,21 @@ Explore following REST Api to try out the service.
 	PATCH: /user/{userUuid}/feed/{feedUuid}/subscribe
 	Payload: No Content
 	Response: 
-		```true
+		```
+			true
 		```
 * Unsubscribe user to a feed:
 	PATCH: /user/{userUuid}/feed/{feedUuid}/unsubscribe
 	Payload: No Content
 	Response: 
-		```true
+		```
+			true
 		```
 * View list of feeds user is subscribed:
 	GET: /user/{userUuid}/feeds
 	Response: 
-		```[
+		```
+			[
 			    {
 			        "createDate": 1506355004000,
 			        "uuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
@@ -106,7 +117,8 @@ Explore following REST Api to try out the service.
 * Publish articles to the feeds:
 	POST: /feed/{feedUuid}/article
 	Payload: 
-		```{
+		```
+			{
 				"title": "article 1",
 				"description": "description 1",
 				"content": "content 1",
@@ -115,7 +127,8 @@ Explore following REST Api to try out the service.
 			}
 		```
 	Response:
-		```{
+		```
+			{
 			    "createDate": 1506355026306,
 			    "uuid": "a0cccbbe-9c68-4a8c-9427-0a9f93b1c46c",
 			    "title": "article 1",
@@ -128,7 +141,8 @@ Explore following REST Api to try out the service.
 * Get articles from the feed a user is subscribed (articles are sorted by latest published at the starting):
 	GET: /user/{userUuid}/feeds/articles
 	Response:
-		```[
+		```
+			[
 			    {
 			        "feedUuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
 			        "articles": [
@@ -157,9 +171,9 @@ Explore following REST Api to try out the service.
 ## Choice of technology & frameworks
 
 * [Dropwizard](https://github.com/dropwizard/dropwizard) for the general scaffolding. Dropwizard provides basic infrastructure to build microservices in java using some of the best technologies available in Open Source.
-* [Parseq](https://github.com/linkedin/parseq) for writing asynchronous code for async operations viz. IO. Its a non-blocking framework developed by [LinkedIn] (https://www.linkedin.com) and support parallel task execution asynchonously.
-* [Gradle] (https://gradle.org/) for build and packaging, it provides flexibility as well as incremental builds for efficient development.
-* [Java 8] (http://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html) as the language as developer is comfortable with the language and also Oracle made a lot of improvements over the years making it one of the most robust, high-performance and platform language.
+* [Parseq](https://github.com/linkedin/parseq) for writing asynchronous code for async operations viz. IO. Its a non-blocking framework developed by [LinkedIn](https://www.linkedin.com) and support parallel task execution asynchonously.
+* [Gradle](https://gradle.org/) for build and packaging, it provides flexibility as well as incremental builds for efficient development.
+* [Java 8](http://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html) as the language as developer is comfortable with the language and also Oracle made a lot of improvements over the years making it one of the most robust, high-performance and platform language.
 
 ## Storage
 
@@ -167,6 +181,7 @@ The service implements a custom storage. Here are the design rationale:
 
 * Minimum footprint and almost no overhead of features which are need useful for the problem as opposed to using an external database/storage system.
 * Simple hierarical structure:
+	```
 	- root_dir
 		- user
 			- b4dd4e1b-568e-30e7-8cc1-a9ad3c7dadc0
@@ -182,6 +197,7 @@ The service implements a custom storage. Here are the design rationale:
 				- feed.meta
 				- articles
 					- _part0
+	```
 * each entity in the system has a uuid, for user its hashed using userName and for feed hash of feed name. For articles, uuid are auto generated.
 * User: Adding a user in the system, created a directory inside user root with the directory name as the uuid. Under the directory, a user.meta file is created which has a serialized json string of the user's information. Each line always has createDate and uuid and first two elements.
 * Sample user.meta file contents:
@@ -200,7 +216,7 @@ The service implements a custom storage. Here are the design rationale:
 * The current version doesn't maintain any indexes for the articles but future versions could create indexes and reverse indexes to lookup a small subset of the data by max articles and  times to allow faster lookup.
 * Sample _part0 file contents:
 	```
-{"createDate":"2017-09-25 21:09:08","uuid":"df107c19-319b-4237-b4b6-193de29525a0","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
+	{"createDate":"2017-09-25 21:09:08","uuid":"df107c19-319b-4237-b4b6-193de29525a0","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 {"createDate":"2017-09-25 21:09:10","uuid":"0bf0d2ca-13d8-45a0-b2ba-1cbd4dedf6a3","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 {"createDate":"2017-09-25 21:09:11","uuid":"36dae2d6-8a65-43d6-8aeb-719d732d541d","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 	```
