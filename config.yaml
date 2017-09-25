@@ -1,7 +1,7 @@
 template: Hello Welcome to TruFeed
 
 storage:
-  rootDir: /Users/sinhar/Personal/db
+  rootDir: /tmp
   userStore:
     name: user
     path: /user
