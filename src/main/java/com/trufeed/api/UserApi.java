@@ -45,7 +45,13 @@ public class UserApi extends Api {
   public Response getSubscribedFeeds(@PathParam("userUuid") String uuid) {
     return execute(service.getSubscribedFeeds(uuid));
   }
-  
+
+  @GET
+  @Path("/{userUuid}/feeds/articles")
+  public Response getSubscribedFeedsArticles(@PathParam("userUuid") String uuid) {
+    return execute(service.getSubscribedFeedsArticles(uuid));
+  }
+
   @PATCH
   @Path("{userUuid}/feed/{feedUuid}/subscribe")
   public Response subscribe(

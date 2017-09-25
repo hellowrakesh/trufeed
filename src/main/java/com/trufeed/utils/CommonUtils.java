@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class CommonUtils {
 
   protected static Logger LOG = LoggerFactory.getLogger(CommonUtils.class);
-  
+
   private static final ThreadLocal<DateFormat> DATE_FORMAT_LOCAL = new ThreadLocal<>();
 
   private static final ObjectMapper mapper;
@@ -25,16 +25,16 @@ public class CommonUtils {
     mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
     mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, true);
   }
-  
+
   public static DateFormat getDateFormat() {
-	    DateFormat dateFormat = DATE_FORMAT_LOCAL.get();
-	    if (dateFormat == null) {
-	      dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	      dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	      DATE_FORMAT_LOCAL.set(dateFormat);
-	    }
-	    return dateFormat;
-	  }
+    DateFormat dateFormat = DATE_FORMAT_LOCAL.get();
+    if (dateFormat == null) {
+      dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+      DATE_FORMAT_LOCAL.set(dateFormat);
+    }
+    return dateFormat;
+  }
 
   public static Date stringToDate(String dateValue) {
     try {
@@ -59,11 +59,12 @@ public class CommonUtils {
   }
 
   public static <T> T fromJsonStringToObject(String value, Class<T> clazz) {
-	  try {
-		  return mapper.readValue(value, clazz);
-	    } catch (Exception exception) {
-	      LOG.error("Unable to convert json string: " + value + " to object of type: " + clazz, exception);
-	      throw new RuntimeException(exception);
-	    }
+    try {
+      return mapper.readValue(value, clazz);
+    } catch (Exception exception) {
+      LOG.error(
+          "Unable to convert json string: " + value + " to object of type: " + clazz, exception);
+      throw new RuntimeException(exception);
+    }
   }
 }

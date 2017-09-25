@@ -5,16 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
+import org.hibernate.validator.constraints.NotEmpty;
 
-public class Article {
+public class Article extends FileSerializable {
 
-  private final String uuid;
-  private final String title;
+  /** */
+  private static final long serialVersionUID = 1L;
+
+  @NotEmpty private final String title;
   private final String description;
-  private final String content;
+  @NotEmpty private final String content;
   private final Map<String, Serializable> metadata;
-  private final String author;
-  private final Date publishedDate;
+  @NotEmpty private final String author;
 
   @JsonCreator
   public Article(
@@ -24,18 +26,13 @@ public class Article {
       @JsonProperty("content") String content,
       @JsonProperty("metadata") Map<String, Serializable> metadata,
       @JsonProperty("author") String author,
-      @JsonProperty("publishedDate") Date publishedDate) {
-    this.uuid = uuid;
+      @JsonProperty("createDate") Date createDate) {
+    super(createDate, uuid);
     this.title = title;
     this.description = description;
     this.content = content;
     this.metadata = metadata;
     this.author = author;
-    this.publishedDate = publishedDate;
-  }
-
-  public String getUuid() {
-    return uuid;
   }
 
   public String getTitle() {
@@ -56,9 +53,5 @@ public class Article {
 
   public String getAuthor() {
     return author;
-  }
-
-  public Date getPublishedDate() {
-    return publishedDate;
   }
 }

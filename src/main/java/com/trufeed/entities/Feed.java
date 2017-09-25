@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class Feed extends LogSerializable {
+public class Feed extends FileSerializable {
 
   /** */
   private static final long serialVersionUID = 1L;

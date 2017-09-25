@@ -6,7 +6,7 @@ import com.google.common.base.MoreObjects;
 import java.util.Date;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class User extends LogSerializable {
+public class User extends FileSerializable {
 
   /** */
   private static final long serialVersionUID = 578254629453228515L;

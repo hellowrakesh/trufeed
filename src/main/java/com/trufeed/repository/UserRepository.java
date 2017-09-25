@@ -1,12 +1,11 @@
 package com.trufeed.repository;
 
-import java.util.List;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.linkedin.parseq.Task;
 import com.trufeed.container.TrufeedConfiguration.Storage;
 import com.trufeed.entities.User;
+import java.util.List;
 
 @Singleton
 public class UserRepository extends FileRepository {
@@ -44,9 +43,9 @@ public class UserRepository extends FileRepository {
   }
 
   public Task<List<String>> getAllFeeds(String userUuid) {
-	    return getAllFileNames(userUuid, USER_FEED_DIR_NAME);
-	  }
-  
+    return getAllFileNames(userUuid, USER_FEED_DIR_NAME);
+  }
+
   public Task<Boolean> subscribe(String userUuid, String feedUuid) {
     return createEmptyFile(userUuid, USER_FEED_DIR_NAME, getFeedFileName(feedUuid));
   }
