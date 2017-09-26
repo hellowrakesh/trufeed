@@ -23,7 +23,7 @@ Explore following REST Api to try out the service.
 * Create a new feed:
 	POST: /feed
 	Payload:
-		```
+		```json
 			{
 				"name": "my first feed post here",
 				"title": "title 01",
@@ -31,7 +31,7 @@ Explore following REST Api to try out the service.
 			}
 		```
 	Response:
-		```
+		```json
 			{
 			    "createDate": 1506355004697,
 			    "uuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
@@ -43,7 +43,7 @@ Explore following REST Api to try out the service.
 * Get all the feeds:
 	GET: /feed
 	Response:
-		```
+		```json
 			[
 			    {
 			        "createDate": 1506370575000,
@@ -57,7 +57,7 @@ Explore following REST Api to try out the service.
 * Create a new user:
 	POST: /user
 	Payload:
-		```
+		```json
 			{
 			  "userName": "rakeshsinha",
 			  "firstName": "Rakesh",
@@ -65,7 +65,7 @@ Explore following REST Api to try out the service.
 			}
 		```
 	Response:
-		```
+		```json
 			{
 			    "createDate": 1506354979004,
 			    "uuid": "d703a5f3-a1fa-3042-bc32-ff400bdd1ecb",
@@ -77,7 +77,7 @@ Explore following REST Api to try out the service.
 * Get user details:
 	GET: /user/{userUuid}
 	Response:
-		```
+		```json
 			{
 			    "createDate": 1506354979004,
 			    "uuid": "d703a5f3-a1fa-3042-bc32-ff400bdd1ecb",
@@ -90,20 +90,20 @@ Explore following REST Api to try out the service.
 	PATCH: /user/{userUuid}/feed/{feedUuid}/subscribe
 	Payload: No Content
 	Response: 
-		```
+		```json
 			true
 		```
 * Unsubscribe user to a feed:
 	PATCH: /user/{userUuid}/feed/{feedUuid}/unsubscribe
 	Payload: No Content
 	Response: 
-		```
+		```json
 			true
 		```
 * View list of feeds user is subscribed:
 	GET: /user/{userUuid}/feeds
 	Response: 
-		```
+		```json
 			[
 			    {
 			        "createDate": 1506355004000,
@@ -117,7 +117,7 @@ Explore following REST Api to try out the service.
 * Publish articles to the feeds:
 	POST: /feed/{feedUuid}/article
 	Payload: 
-		```
+		```json
 			{
 				"title": "article 1",
 				"description": "description 1",
@@ -141,7 +141,7 @@ Explore following REST Api to try out the service.
 * Get articles from the feed a user is subscribed (articles are sorted by latest published at the starting):
 	GET: /user/{userUuid}/feeds/articles
 	Response:
-		```
+		```json
 			[
 			    {
 			        "feedUuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
@@ -180,7 +180,7 @@ The service implements a custom storage. Here are the design rationale:
 
 * Minimum footprint and almost no overhead of features which are need useful for the problem as opposed to using an external database/storage system.
 * Simple hierarical structure:
-	```
+	```json
 	- root_dir
 		- user
 			- b4dd4e1b-568e-30e7-8cc1-a9ad3c7dadc0
@@ -200,7 +200,7 @@ The service implements a custom storage. Here are the design rationale:
 * each entity in the system has a uuid, for user its hashed using userName and for feed hash of feed name. For articles, uuid are auto generated.
 * User: Adding a user in the system, created a directory inside user root with the directory name as the uuid. Under the directory, a user.meta file is created which has a serialized json string of the user's information. Each line always has createDate and uuid and first two elements.
 * Sample user.meta file contents:
-	```
+	```json
 	{"createDate":"2017-09-25 21:29:55","uuid":"d703a5f3-a1fa-3042-bc32-ff400bdd1ecb","userName":"rakeshsinha","firstName":"Rakesh","lastName":"Sinha"}
 	```
 * If a user is subscribed to a feed, it created a 0 byte file inside user/{userUuid}/feeds/{feedUuid}.
@@ -208,13 +208,13 @@ The service implements a custom storage. Here are the design rationale:
 * The rationale behind maintaining 0 byte file inside user object store is because feeds are independent and isolated to the consumers and mostly high through-put. Any user management doesn't affect the actual content being created. It also isolates a users action to a smaller scope and allows future scalability to maintain content and users separately.
 * Feeds are stored similarly as user, with each feed creating a directory feedUuid and file feed.mata which is a json serialized string of the feed object, with createDate and uuid are first two elements in the line.
 * Sample feed.meta file contents:
-	```
+	```json
 	{"createDate":"2017-09-25 21:08:57","uuid":"43e4b8c1-4bb1-363e-a6fa-25fc94adb165","name":"my first feed post here","title":"title 01","description":"description 01"}
 	```
 * Articles: These are utmost important as this is the main content being generated in the system. The system makes an unline assumption that all articles once published remain "immutable" forever. They are stored inside articles sub-directory in file _part0. The first version creates a single file but as the system grows, published articles data can be split across multiple files based on max file size. Each file is sorted by publish date and is stored as json representation of article object having createDate and uuid as the first two values.
 * The current version doesn't maintain any indexes for the articles but future versions could create indexes and reverse indexes to lookup a small subset of the data by max articles and  times to allow faster lookup.
 * Sample _part0 file contents:
-	```
+	```json
 	{"createDate":"2017-09-25 21:09:08","uuid":"df107c19-319b-4237-b4b6-193de29525a0","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 {"createDate":"2017-09-25 21:09:10","uuid":"0bf0d2ca-13d8-45a0-b2ba-1cbd4dedf6a3","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 {"createDate":"2017-09-25 21:09:11","uuid":"36dae2d6-8a65-43d6-8aeb-719d732d541d","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
