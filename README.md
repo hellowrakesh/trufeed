@@ -23,142 +23,142 @@ Explore following REST Api to try out the service.
 * Create a new feed:
 	POST: /feed
 	Payload:
-		```java
-			{
-				"name": "my first feed post here",
-				"title": "title 01",
-				"description": "description 01"
-			}
-		```
+```java
+	{
+		"name": "my first feed post here",
+		"title": "title 01",
+		"description": "description 01"
+	}
+```
 	Response:
-		```java
-			{
-			    "createDate": 1506355004697,
-			    "uuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
-			    "name": "my first feed post here",
-			    "title": "title 01",
-			    "description": "description 01"
-			}
-		```
+```java
+	{
+	    "createDate": 1506355004697,
+	    "uuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
+	    "name": "my first feed post here",
+	    "title": "title 01",
+	    "description": "description 01"
+	}
+```
 * Get all the feeds:
 	GET: /feed
 	Response:
-		```java
-			[
-			    {
-			        "createDate": 1506370575000,
-			        "uuid": "04fda720-c8d4-3d38-8531-43733edd02be",
-			        "name": "name_2",
-			        "title": "title 2",
-			        "description": "description 2"
-			    }
-			]
-		```
+```java
+	[
+	    {
+	        "createDate": 1506370575000,
+	        "uuid": "04fda720-c8d4-3d38-8531-43733edd02be",
+	        "name": "name_2",
+	        "title": "title 2",
+	        "description": "description 2"
+	    }
+	]
+```
 * Create a new user:
 	POST: /user
 	Payload:
-		```java
-			{
-			  "userName": "rakeshsinha",
-			  "firstName": "Rakesh",
-			  "lastName": "Sinha"
-			}
-		```
+```java
+	{
+	  "userName": "rakeshsinha",
+	  "firstName": "Rakesh",
+	  "lastName": "Sinha"
+	}
+```
 	Response:
-		```java
-			{
-			    "createDate": 1506354979004,
-			    "uuid": "d703a5f3-a1fa-3042-bc32-ff400bdd1ecb",
-			    "userName": "rakeshsinha",
-			    "firstName": "Rakesh",
-			    "lastName": "Sinha"
-			}
-		```
+```java
+	{
+	    "createDate": 1506354979004,
+	    "uuid": "d703a5f3-a1fa-3042-bc32-ff400bdd1ecb",
+	    "userName": "rakeshsinha",
+	    "firstName": "Rakesh",
+	    "lastName": "Sinha"
+	}
+```
 * Get user details:
 	GET: /user/{userUuid}
 	Response:
-		```java
-			{
-			    "createDate": 1506354979004,
-			    "uuid": "d703a5f3-a1fa-3042-bc32-ff400bdd1ecb",
-			    "userName": "rakeshsinha",
-			    "firstName": "Rakesh",
-			    "lastName": "Sinha"
-			}
-		```
+```java
+	{
+	    "createDate": 1506354979004,
+	    "uuid": "d703a5f3-a1fa-3042-bc32-ff400bdd1ecb",
+	    "userName": "rakeshsinha",
+	    "firstName": "Rakesh",
+	    "lastName": "Sinha"
+	}
+```
 * Subscribe user to a feed:
 	PATCH: /user/{userUuid}/feed/{feedUuid}/subscribe
 	Payload: No Content
 	Response: 
-		```java
-			true
-		```
+```java
+	true
+```
 * Unsubscribe user to a feed:
 	PATCH: /user/{userUuid}/feed/{feedUuid}/unsubscribe
 	Payload: No Content
 	Response: 
-		```java
-			true
-		```
+```java
+	true
+```
 * View list of feeds user is subscribed:
 	GET: /user/{userUuid}/feeds
 	Response: 
-		```java
-			[
-			    {
-			        "createDate": 1506355004000,
-			        "uuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
-			        "name": "my first feed post here",
-			        "title": "title 01",
-			        "description": "description 01"
-			    }
-			]
-		```
+```java
+	[
+	    {
+	        "createDate": 1506355004000,
+	        "uuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
+	        "name": "my first feed post here",
+	        "title": "title 01",
+	        "description": "description 01"
+	    }
+	]
+```
 * Publish articles to the feeds:
 	POST: /feed/{feedUuid}/article
 	Payload: 
-		```java
-			{
-				"title": "article 1",
-				"description": "description 1",
-				"content": "content 1",
-				"metadata": {},
-				"author": "rakesh"
-			}
-		```
+```java
+	{
+		"title": "article 1",
+		"description": "description 1",
+		"content": "content 1",
+		"metadata": {},
+		"author": "rakesh"
+	}
+```
 	Response:
-		```
-			{
-			    "createDate": 1506355026306,
-			    "uuid": "a0cccbbe-9c68-4a8c-9427-0a9f93b1c46c",
-			    "title": "article 1",
-			    "description": "description 1",
-			    "content": "content 1",
-			    "metadata": {},
-			    "author": "rakesh"
-			}
-		```
+```
+	{
+	    "createDate": 1506355026306,
+	    "uuid": "a0cccbbe-9c68-4a8c-9427-0a9f93b1c46c",
+	    "title": "article 1",
+	    "description": "description 1",
+	    "content": "content 1",
+	    "metadata": {},
+	    "author": "rakesh"
+	}
+```
 * Get articles from the feed a user is subscribed (articles are sorted by latest published at the starting):
 	GET: /user/{userUuid}/feeds/articles
 	Response:
-		```java
-			[
-			    {
-			        "feedUuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
-			        "articles": [
-			            {
-			                "createDate": 1506355026000,
-			                "uuid": "a0cccbbe-9c68-4a8c-9427-0a9f93b1c46c",
-			                "title": "article 1",
-			                "description": "description 1",
-			                "content": "content 1",
-			                "metadata": {},
-			                "author": "rakesh"
-			            }
-			        ]
-			    }
-			]
-		```
+```java
+	[
+	    {
+	        "feedUuid": "43e4b8c1-4bb1-363e-a6fa-25fc94adb165",
+	        "articles": [
+	            {
+	                "createDate": 1506355026000,
+	                "uuid": "a0cccbbe-9c68-4a8c-9427-0a9f93b1c46c",
+	                "title": "article 1",
+	                "description": "description 1",
+	                "content": "content 1",
+	                "metadata": {},
+	                "author": "rakesh"
+	            }
+	        ]
+	    }
+	]
+```
 		
 ## Design Consideration
 
@@ -180,7 +180,7 @@ The service implements a custom storage. Here are the design rationale:
 
 * Minimum footprint and almost no overhead of features which are need useful for the problem as opposed to using an external database/storage system.
 * Simple hierarical structure:
-	```java
+```java
 	- root_dir
 		- user
 			- b4dd4e1b-568e-30e7-8cc1-a9ad3c7dadc0
@@ -196,29 +196,31 @@ The service implements a custom storage. Here are the design rationale:
 				- feed.meta
 				- articles
 					- _part0
-	```
+```
 * each entity in the system has a uuid, for user its hashed using userName and for feed hash of feed name. For articles, uuid are auto generated.
 * User: Adding a user in the system, created a directory inside user root with the directory name as the uuid. Under the directory, a user.meta file is created which has a serialized json string of the user's information. Each line always has createDate and uuid and first two elements.
 * Sample user.meta file contents:
-	```java
+```java
 	{"createDate":"2017-09-25 21:29:55","uuid":"d703a5f3-a1fa-3042-bc32-ff400bdd1ecb","userName":"rakeshsinha","firstName":"Rakesh","lastName":"Sinha"}
-	```
+```
 * If a user is subscribed to a feed, it created a 0 byte file inside user/{userUuid}/feeds/{feedUuid}.
 * Unsubscribe action removes the file from feeds dir.
 * The rationale behind maintaining 0 byte file inside user object store is because feeds are independent and isolated to the consumers and mostly high through-put. Any user management doesn't affect the actual content being created. It also isolates a users action to a smaller scope and allows future scalability to maintain content and users separately.
 * Feeds are stored similarly as user, with each feed creating a directory feedUuid and file feed.mata which is a json serialized string of the feed object, with createDate and uuid are first two elements in the line.
 * Sample feed.meta file contents:
-	```java
+```java
 	{"createDate":"2017-09-25 21:08:57","uuid":"43e4b8c1-4bb1-363e-a6fa-25fc94adb165","name":"my first feed post here","title":"title 01","description":"description 01"}
-	```
+```
 * Articles: These are utmost important as this is the main content being generated in the system. The system makes an unline assumption that all articles once published remain "immutable" forever. They are stored inside articles sub-directory in file _part0. The first version creates a single file but as the system grows, published articles data can be split across multiple files based on max file size. Each file is sorted by publish date and is stored as json representation of article object having createDate and uuid as the first two values.
 * The current version doesn't maintain any indexes for the articles but future versions could create indexes and reverse indexes to lookup a small subset of the data by max articles and  times to allow faster lookup.
 * Sample _part0 file contents:
-	```java
-	{"createDate":"2017-09-25 21:09:08","uuid":"df107c19-319b-4237-b4b6-193de29525a0","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
+
+```java
+    {"createDate":"2017-09-25 21:09:08","uuid":"df107c19-319b-4237-b4b6-193de29525a0","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 {"createDate":"2017-09-25 21:09:10","uuid":"0bf0d2ca-13d8-45a0-b2ba-1cbd4dedf6a3","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 {"createDate":"2017-09-25 21:09:11","uuid":"36dae2d6-8a65-43d6-8aeb-719d732d541d","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
-	```
+```
+
 * When fetching list of articles for a given feed, the articles are returned in the order, where the lastes published article is on the top.
 * All the dates are UTC.
 
