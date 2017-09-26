@@ -21,8 +21,11 @@ In order to try out the service, please follow the steps:
 Explore following REST Api to try out the service.
 
 * Create a new feed:
+
 POST: /feed
+
 Payload:
+
 ```java
 	{
 		"name": "my first feed post here",
@@ -30,6 +33,7 @@ Payload:
 		"description": "description 01"
 	}
 ```	
+
 Response:
 ```java
 	{
@@ -42,7 +46,9 @@ Response:
 ```
 
 * Get all the feeds:
+
 GET: /feed
+
 Response:
 ```java
 	[
@@ -57,7 +63,9 @@ Response:
 ```
 
 * Create a new user:
+
 POST: /user
+
 Payload:
 ```java
 	{
@@ -66,6 +74,7 @@ Payload:
 	  "lastName": "Sinha"
 	}
 ```
+
 Response:
 ```java
 	{
@@ -78,7 +87,9 @@ Response:
 ```
 
 * Get user details:
-	GET: /user/{userUuid}
+
+GET: /user/{userUuid}
+
 Response:
 ```java
 	{
@@ -89,24 +100,33 @@ Response:
 	    "lastName": "Sinha"
 	}
 ```
+
 * Subscribe user to a feed:
+
 PATCH: /user/{userUuid}/feed/{feedUuid}/subscribe
+
 Payload: No Content
+
 Response: 
 ```java
 	true
 ```
 
 * Unsubscribe user to a feed:
+
 PATCH: /user/{userUuid}/feed/{feedUuid}/unsubscribe
+
 Payload: No Content
+
 Response: 
 ```java
 true
 ```
 
 * View list of feeds user is subscribed:
+
 GET: /user/{userUuid}/feeds
+
 Response: 
 ```java
 	[
@@ -121,7 +141,9 @@ Response:
 ```
 
 * Publish articles to the feeds:
+
 POST: /feed/{feedUuid}/article
+
 Payload: 
 ```java
 	{
@@ -132,6 +154,7 @@ Payload:
 		"author": "rakesh"
 	}
 ```
+
 Response:
 ```
 	{
@@ -146,7 +169,9 @@ Response:
 ```
 
 * Get articles from the feed a user is subscribed (articles are sorted by latest published date at the starting):
+
 GET: /user/{userUuid}/feeds/articles
+
 Response:
 ```java
 	[
@@ -208,7 +233,7 @@ The service implements a custom storage. Here are the design rationales:
 * User: Adding a user in the system, creates a directory inside user root with the directory name as the uuid. Under the directory, a user.meta file is created which has a serialized json string of the user's information. Each line always has createDate and uuid and first two elements.
 * Sample user.meta file contents:
 ```java
-	{"createDate":"2017-09-25 21:29:55","uuid":"d703a5f3-a1fa-3042-bc32-ff400bdd1ecb","userName":"rakeshsinha","firstName":"Rakesh","lastName":"Sinha"}
+{"createDate":"2017-09-25 21:29:55","uuid":"d703a5f3-a1fa-3042-bc32-ff400bdd1ecb","userName":"rakeshsinha","firstName":"Rakesh","lastName":"Sinha"}
 ```
 * If a user is subscribed to a feed, it creates a 0 byte file inside user/{userUuid}/feeds/{feedUuid}.
 * Unsubscribe action removes the file from feeds dir.
@@ -216,7 +241,7 @@ The service implements a custom storage. Here are the design rationales:
 * Feeds are stored in the same way as user, with each feed creating a directory feedUuid and file feed.mata which is a json serialized string of the feed object, with createDate and uuid are first two elements in the line.
 * Sample feed.meta file contents:
 ```java
-	{"createDate":"2017-09-25 21:08:57","uuid":"43e4b8c1-4bb1-363e-a6fa-25fc94adb165","name":"my first feed post here","title":"title 01","description":"description 01"}
+{"createDate":"2017-09-25 21:08:57","uuid":"43e4b8c1-4bb1-363e-a6fa-25fc94adb165","name":"my first feed post here","title":"title 01","description":"description 01"}
 ```
 * Articles: These are utmost important as this is the main content being generated in the system. The system makes an underline assumption that all articles once published remain "immutable" forever. They are stored inside articles sub-directory in file _part0. The first version creates a single file but as the system grows, published articles can be split across multiple files based on max file size. Each file is sorted by publish date and is stored as json representation of article object having createDate and uuid as the first two values.
 * The current version doesn't maintain any indexes for the articles but future versions could create indexes and reverse indexes to lookup a small subset of the data by max articles and  times to allow faster lookup.
