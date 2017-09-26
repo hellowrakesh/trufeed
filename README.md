@@ -21,16 +21,16 @@ In order to try out the service, please follow the steps:
 Explore following REST Api to try out the service.
 
 * Create a new feed:
-	POST: /feed
-	Payload:
+POST: /feed
+Payload:
 ```java
 	{
 		"name": "my first feed post here",
 		"title": "title 01",
 		"description": "description 01"
 	}
-```
-	Response:
+```	
+Response:
 ```java
 	{
 	    "createDate": 1506355004697,
@@ -40,9 +40,10 @@ Explore following REST Api to try out the service.
 	    "description": "description 01"
 	}
 ```
+
 * Get all the feeds:
-	GET: /feed
-	Response:
+GET: /feed
+Response:
 ```java
 	[
 	    {
@@ -54,9 +55,10 @@ Explore following REST Api to try out the service.
 	    }
 	]
 ```
+
 * Create a new user:
-	POST: /user
-	Payload:
+POST: /user
+Payload:
 ```java
 	{
 	  "userName": "rakeshsinha",
@@ -64,7 +66,7 @@ Explore following REST Api to try out the service.
 	  "lastName": "Sinha"
 	}
 ```
-	Response:
+Response:
 ```java
 	{
 	    "createDate": 1506354979004,
@@ -74,9 +76,10 @@ Explore following REST Api to try out the service.
 	    "lastName": "Sinha"
 	}
 ```
+
 * Get user details:
 	GET: /user/{userUuid}
-	Response:
+Response:
 ```java
 	{
 	    "createDate": 1506354979004,
@@ -87,22 +90,24 @@ Explore following REST Api to try out the service.
 	}
 ```
 * Subscribe user to a feed:
-	PATCH: /user/{userUuid}/feed/{feedUuid}/subscribe
-	Payload: No Content
-	Response: 
+PATCH: /user/{userUuid}/feed/{feedUuid}/subscribe
+Payload: No Content
+Response: 
 ```java
 	true
 ```
+
 * Unsubscribe user to a feed:
-	PATCH: /user/{userUuid}/feed/{feedUuid}/unsubscribe
-	Payload: No Content
-	Response: 
+PATCH: /user/{userUuid}/feed/{feedUuid}/unsubscribe
+Payload: No Content
+Response: 
 ```java
-	true
+true
 ```
+
 * View list of feeds user is subscribed:
-	GET: /user/{userUuid}/feeds
-	Response: 
+GET: /user/{userUuid}/feeds
+Response: 
 ```java
 	[
 	    {
@@ -114,9 +119,10 @@ Explore following REST Api to try out the service.
 	    }
 	]
 ```
+
 * Publish articles to the feeds:
-	POST: /feed/{feedUuid}/article
-	Payload: 
+POST: /feed/{feedUuid}/article
+Payload: 
 ```java
 	{
 		"title": "article 1",
@@ -126,7 +132,7 @@ Explore following REST Api to try out the service.
 		"author": "rakesh"
 	}
 ```
-	Response:
+Response:
 ```
 	{
 	    "createDate": 1506355026306,
@@ -138,9 +144,10 @@ Explore following REST Api to try out the service.
 	    "author": "rakesh"
 	}
 ```
-* Get articles from the feed a user is subscribed (articles are sorted by latest published at the starting):
-	GET: /user/{userUuid}/feeds/articles
-	Response:
+
+* Get articles from the feed a user is subscribed (articles are sorted by latest published date at the starting):
+GET: /user/{userUuid}/feeds/articles
+Response:
 ```java
 	[
 	    {
@@ -160,13 +167,13 @@ Explore following REST Api to try out the service.
 	]
 ```
 		
-## Design Consideration
+## Design Considerations
 
 * The system is designed to allow basic functionality for a user to register, publish articles to feed, subscribe/unsubscribe and get the articles from subscribed feed.
-* System is independent of the type of articles published and users can add metadata for specific custom data.
+* System is agnostic to the type of articles published and users can add metadata for specific custom data.
 * The system is designed to be fast, scalable, concurrent allowing multiple users to use the system.
 * All the data is persisted and it is achieved through a simple file system based storage.
-* Standard RESTful paradigm is followed with backward compatibility for future enhancements.
+* Fllows standard RESTful paradigm with backward compatibility for future enhancements.
 
 ## Choice of technology & frameworks
 
@@ -176,7 +183,7 @@ Explore following REST Api to try out the service.
 
 ## Storage
 
-The service implements a custom storage. Here are the design rationale:
+The service implements a custom storage. Here are the design rationales:
 
 * Minimum footprint and almost no overhead of features which are need useful for the problem as opposed to using an external database/storage system.
 * Simple hierarical structure:
@@ -197,34 +204,34 @@ The service implements a custom storage. Here are the design rationale:
 				- articles
 					- _part0
 ```
-* each entity in the system has a uuid, for user its hashed using userName and for feed hash of feed name. For articles, uuid are auto generated.
-* User: Adding a user in the system, created a directory inside user root with the directory name as the uuid. Under the directory, a user.meta file is created which has a serialized json string of the user's information. Each line always has createDate and uuid and first two elements.
+* Each entity in the system has a uuid, for user its hashed using userName and for feed it uses hash of feed name. For articles, uuids are auto generated.
+* User: Adding a user in the system, creates a directory inside user root with the directory name as the uuid. Under the directory, a user.meta file is created which has a serialized json string of the user's information. Each line always has createDate and uuid and first two elements.
 * Sample user.meta file contents:
 ```java
 	{"createDate":"2017-09-25 21:29:55","uuid":"d703a5f3-a1fa-3042-bc32-ff400bdd1ecb","userName":"rakeshsinha","firstName":"Rakesh","lastName":"Sinha"}
 ```
-* If a user is subscribed to a feed, it created a 0 byte file inside user/{userUuid}/feeds/{feedUuid}.
+* If a user is subscribed to a feed, it creates a 0 byte file inside user/{userUuid}/feeds/{feedUuid}.
 * Unsubscribe action removes the file from feeds dir.
-* The rationale behind maintaining 0 byte file inside user object store is because feeds are independent and isolated to the consumers and mostly high through-put. Any user management doesn't affect the actual content being created. It also isolates a users action to a smaller scope and allows future scalability to maintain content and users separately.
-* Feeds are stored similarly as user, with each feed creating a directory feedUuid and file feed.mata which is a json serialized string of the feed object, with createDate and uuid are first two elements in the line.
+* The rationale behind maintaining 0 byte file inside user object store is because feeds are independent and isolated to the consumers and mostly high through-put that user management. Any user management doesn't affect the actual content being created. It also isolates a users action to a smaller scope and allows future scalability to maintain content and users separately.
+* Feeds are stored in the same way as user, with each feed creating a directory feedUuid and file feed.mata which is a json serialized string of the feed object, with createDate and uuid are first two elements in the line.
 * Sample feed.meta file contents:
 ```java
 	{"createDate":"2017-09-25 21:08:57","uuid":"43e4b8c1-4bb1-363e-a6fa-25fc94adb165","name":"my first feed post here","title":"title 01","description":"description 01"}
 ```
-* Articles: These are utmost important as this is the main content being generated in the system. The system makes an unline assumption that all articles once published remain "immutable" forever. They are stored inside articles sub-directory in file _part0. The first version creates a single file but as the system grows, published articles data can be split across multiple files based on max file size. Each file is sorted by publish date and is stored as json representation of article object having createDate and uuid as the first two values.
+* Articles: These are utmost important as this is the main content being generated in the system. The system makes an underline assumption that all articles once published remain "immutable" forever. They are stored inside articles sub-directory in file _part0. The first version creates a single file but as the system grows, published articles can be split across multiple files based on max file size. Each file is sorted by publish date and is stored as json representation of article object having createDate and uuid as the first two values.
 * The current version doesn't maintain any indexes for the articles but future versions could create indexes and reverse indexes to lookup a small subset of the data by max articles and  times to allow faster lookup.
 * Sample _part0 file contents:
 
 ```java
-    {"createDate":"2017-09-25 21:09:08","uuid":"df107c19-319b-4237-b4b6-193de29525a0","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
+{"createDate":"2017-09-25 21:09:08","uuid":"df107c19-319b-4237-b4b6-193de29525a0","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 {"createDate":"2017-09-25 21:09:10","uuid":"0bf0d2ca-13d8-45a0-b2ba-1cbd4dedf6a3","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 {"createDate":"2017-09-25 21:09:11","uuid":"36dae2d6-8a65-43d6-8aeb-719d732d541d","title":"article 1","description":"description 1","content":"content 1","metadata":{},"author":"rakesh"}
 ```
 
-* When fetching list of articles for a given feed, the articles are returned in the order, where the lastes published article is on the top.
+* When fetching list of articles for a given feed, the articles are returned in the reverse order, where the lastest published article is on the top.
 * All the dates are UTC.
 
-# Code Structure:
+# Code Structure
 
 The code is primarily devided in following high level layers:
  - api: responsible for handling the request from the client, basic validation and delegates to service.
